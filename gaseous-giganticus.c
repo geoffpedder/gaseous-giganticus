@@ -89,7 +89,7 @@ static int save_texture_sequence = 0;
 static int magic_fluid_flow = 0; /* 0 = skip fluid dynamics, 1 = do fluid dynamics (not yet implemented) */
 
 #define DIM 1024 /* dimensions of cube map face images */
-#define VFDIM 2048 /* dimension of velocity field. (2 * DIM) is reasonable */
+#define VFDIM 4096 /* dimension of velocity field. (2 * DIM) is reasonable */
 static int vfdim = VFDIM;
 #define FDIM ((float) (DIM))
 #define XDIM DIM
@@ -1346,7 +1346,7 @@ static void usage(void)
 	fprintf(stderr, "         addition to the usual cubemap images.  The image height must be\n");
 	fprintf(stderr, "         an integer power of 2.\n");
 	fprintf(stderr, "   -f, --fbm-falloff: Use specified falloff for FBM noise.  Default is 0.5\n");
-	fprintf(stderr, "   -F, --vfdim: Set size of velocity field.  Default:2048. Min: 16. Max: 2048\n");
+	fprintf(stderr, "   -F, --vfdim: Set size of velocity field.  Default:4096. Min: 16. Max: 4096\n");
 	fprintf(stderr, "   -g, --gain, 2nd and later octaves are multiplied by pow(fbm-falloff, (octave-1)*gain)\n");
 	fprintf(stderr, "   -h, --hot-pink: Gradually fade pixels to hot pink.  This will allow\n");
 	fprintf(stderr, "                   divergences in the velocity field to be clearly seen,\n");
@@ -1662,9 +1662,9 @@ static void process_options(int argc, char *argv[])
 				vfdim = 16;
 				fprintf(stderr, "Bad value of vfdim specified, using 16.\n");
 			}
-			if (vfdim > 2048) {
-				vfdim = 2048;
-				fprintf(stderr, "Bad value of vfdim specified, using 2048.\n");
+			if (vfdim > 4096) {
+				vfdim = 4096;
+				fprintf(stderr, "Bad value of vfdim specified, using 4096.\n");
 			}
 			break;
 		case 'h':
@@ -1800,8 +1800,8 @@ static void process_options(int argc, char *argv[])
 	}
 
 	/* Scale so that vfdim doesn't change the effect of these */
-	band_speed_factor = ((float) vfdim / 2048.0) * band_speed_factor * speed_multiplier;
-	velocity_factor = ((float) vfdim / 2048.0) * velocity_factor * speed_multiplier;
+	band_speed_factor = ((float) vfdim / 4096.0) * band_speed_factor * speed_multiplier;
+	velocity_factor = ((float) vfdim / 4096.0) * velocity_factor * speed_multiplier;
 
 	for (i = noise_levels; i < max_noise_levels; i++)
 		ff[i] = 0.0;
@@ -2088,7 +2088,7 @@ static void print_timing_info(int i, int niterations, struct timing_data *move, 
 
 static void check_for_large_dimensions(void)
 {
-	if ((VFDIM > 2048 || DIM > 1024) && cache_aware > 0.0) {
+	if ((VFDIM > 4096 || DIM > 1024) && cache_aware > 0.0) {
 		fprintf(stderr, "\n");
 		fprintf(stderr, "Cache aware particle placement (-K option) is %g and DIM=%d, VFDIM=%d\n",
 				cache_aware, DIM, VFDIM);
