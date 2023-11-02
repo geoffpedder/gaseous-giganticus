@@ -48,7 +48,7 @@ static struct osn_context *ctx;
 #define NPARTICLES 8000000
 static int particle_count = NPARTICLES;
 
-static int nthreads = 4;
+static int nthreads = 12;
 static int thread_iterations = 1;
 static int user_threads = -1;
 static const int image_threads = 6; /* for 6 faces of cubemap, don't change this */
@@ -88,7 +88,7 @@ static float fade_rate = -1.0;
 static int save_texture_sequence = 0;
 static int magic_fluid_flow = 0; /* 0 = skip fluid dynamics, 1 = do fluid dynamics (not yet implemented) */
 
-#define DIM 1024 /* dimensions of cube map face images */
+#define DIM 4096 /* dimensions of cube map face images */
 #define VFDIM 4096 /* dimension of velocity field. (2 * DIM) is reasonable */
 static int vfdim = VFDIM;
 #define FDIM ((float) (DIM))
